@@ -19,24 +19,23 @@ class Debit extends StatefulWidget {
 }
 
 class _DebitState extends State<Debit> {
-
   @override
   void initState() {
-    Provider.of<DebitData>(context,listen: false).fetchAnalysisData('Month');
+    Provider.of<DebitData>(context, listen: false).fetchAnalysisData('Month');
     super.initState();
   }
 
-  void updateDebit(myDebit.Debit debit){
+  void updateDebit(myDebit.Debit debit) {
     showModalBottomSheet(
         context: context,
-        builder:(_){
+        builder: (_) {
           return AddTransaction(
-              displayMode: DisplayMode.debitScreen,
-              transactionId: debit.transactionId,
-              onEditing: true,
-              amount: debit.amount,
+            displayMode: DisplayMode.debitScreen,
+            transactionId: debit.transactionId,
+            onEditing: true,
+            amount: debit.amount,
           );
-    });
+        });
   }
 
   @override
@@ -44,30 +43,32 @@ class _DebitState extends State<Debit> {
     final DebitData debitData = Provider.of<DebitData>(context);
     var media = MediaQuery.of(context);
     return Column(
-      children :[
+      children: [
         SizedBox(
-          height: media.size.height/2.85,
+          height: media.size.height / 2.85,
           child: Card(
               shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(25))
-              ),
-              child: DebitChartWidget(debitData: debitData,)
-          ),
+                  borderRadius: BorderRadius.all(Radius.circular(25))),
+              child: DebitChartWidget(
+                debitData: debitData,
+              )),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children:[
+          children: [
             Container(
               margin: const EdgeInsets.all(20),
-              child: Text('Total Transactions: ${debitData.data.length}',style: const TextStyle(
-                 fontWeight: FontWeight.w500
-              ),),
+              child: Text(
+                'Total Transactions: ${debitData.data.length}',
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
             ),
             Container(
               margin: const EdgeInsets.all(10),
-              child: Text('Total Credits: ${debitData.totalDebits.toStringAsFixed(2)}',style: const TextStyle(
-                  fontWeight: FontWeight.w500
-              ),),
+              child: Text(
+                'Total Credits: ${debitData.totalDebits.toStringAsFixed(2)}',
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
             ),
           ],
         ),
@@ -76,11 +77,8 @@ class _DebitState extends State<Debit> {
             itemCount: debitData.data.length,
             itemBuilder: (context, index) {
               return InkWell(
-                  onTap: () => {
-                      updateDebit(debitData.data[index])
-                  },
-                  child: DebitWidget(debitData.data[index])
-              );
+                  onTap: () => {updateDebit(debitData.data[index])},
+                  child: DebitWidget(debitData.data[index]));
             },
           ),
         ),
@@ -97,31 +95,23 @@ class DebitChartWidget extends StatelessWidget {
 
   final DebitData debitData;
 
-
   @override
   Widget build(BuildContext context) {
     final DataAnalysis dataAnalysis = Provider.of<DataAnalysis>(context);
     return SfCartesianChart(
         title: ChartTitle(text: 'Monthly Credits'),
-        primaryXAxis: CategoryAxis(
-            title: AxisTitle(
-                text: 'Cost'
-            )
-        ),
-
+        primaryXAxis: CategoryAxis(title: AxisTitle(text: 'Cost')),
         margin: const EdgeInsets.all(15),
-        legend: Legend(
-            isVisible: true
-        ),
-        series: <ChartSeries>[
-          ColumnSeries<MonthlyData,int>(
-              dataSource: dataAnalysis.getMonthlyDebitData(debitData.analysisData),
-              xValueMapper: (MonthlyData monthlyData,_)  => monthlyData.day,
-              yValueMapper: (MonthlyData monthlyData,_) => monthlyData.amount.round(),
+        legend: Legend(isVisible: true),
+        series: <CartesianSeries>[
+          ColumnSeries<MonthlyData, int>(
+              dataSource:
+                  dataAnalysis.getMonthlyDebitData(debitData.analysisData),
+              xValueMapper: (MonthlyData monthlyData, _) => monthlyData.day,
+              yValueMapper: (MonthlyData monthlyData, _) =>
+                  monthlyData.amount.round(),
               animationDuration: 2000,
-              name: 'Credits'
-          ),
-        ]
-    );
+              name: 'Credits'),
+        ]);
   }
 }

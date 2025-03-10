@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:money_management/Payload/MonthlyData.dart';
 import 'package:money_management/Screen/HomeScreen.dart';
@@ -12,6 +11,8 @@ import '../Providers/DataAnalysis.dart';
 import '../Widget/CreditOrder.dart';
 
 class CreditScreen extends StatefulWidget {
+  const CreditScreen({super.key});
+
   @override
   State<CreditScreen> createState() => _HomeScreenState();
 }
@@ -38,7 +39,7 @@ class _HomeScreenState extends State<CreditScreen> {
         });
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
       content: Text("Transaction Updated"),
-      duration:Duration(seconds: 2),
+      duration: Duration(seconds: 2),
       backgroundColor: Colors.black54,
     ));
   }
@@ -118,7 +119,7 @@ class CreditChartWidget extends StatelessWidget {
         primaryXAxis: CategoryAxis(title: AxisTitle(text: 'Cost')),
         margin: const EdgeInsets.all(15),
         legend: Legend(isVisible: true),
-        series: <ChartSeries>[
+        series: <CartesianSeries>[
           ColumnSeries<MonthlyData, int>(
               dataSource:
                   dataAnalysis.getMonthlyCreditData(creditData.analysisData),

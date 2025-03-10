@@ -1,10 +1,7 @@
-
-import 'dart:convert';
-
+import 'package:another_telephony/telephony.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gemini/flutter_gemini.dart';
 import 'package:money_management/Providers/SmsService.dart';
-import 'package:telephony/telephony.dart';
 
 class SMSWidget extends StatefulWidget {
   const SMSWidget({Key? key}) : super(key: key);
@@ -16,7 +13,6 @@ class SMSWidget extends StatefulWidget {
 class SMSWidgetState extends State<SMSWidget> {
   late SmsService smsService;
   final telephony = Telephony.instance;
-
 
   @override
   void initState() {
@@ -30,20 +26,15 @@ class SMSWidgetState extends State<SMSWidget> {
     setState(() {}); // Update the UI after initialization
   }
 
-
   @override
   Widget build(BuildContext context) {
     print("SMS.dart Re-called");
-    if (smsService == null) {
-      return const Center(
-        child: CircularProgressIndicator(), // Show loading indicator while initializing
-      );
-    }
 
     const geminiAIToken = "AIzaSyCauRZs_olUpP-s7fYJ3-L86ox_PFT-XlI";
     Gemini.init(apiKey: geminiAIToken);
     final gemini = Gemini.instance;
-    var format = '''Response for sms in following format in Json format, if the sms is related to transaction
+    var format =
+        '''Response for sms in following format in Json format, if the sms is related to transaction
                   1st line is credit / debit if not of those two types respond invalid
                   2nd line amount credited/debited
                   3rd line From if credited and To if debited

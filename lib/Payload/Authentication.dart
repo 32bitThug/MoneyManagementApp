@@ -6,64 +6,60 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Authentication with ChangeNotifier{
-
-  String _authToken='';
-  String _userId= '';
+class Authentication with ChangeNotifier {
+  String _authToken = '';
+  String _userId = '';
   DateTime? _expirationTime = DateTime.now();
   Timer? _authTime;
   // final String baseUrl = 'http://10.0.2.2:9090/api/v1/auth';
-  final String baseUrl = 'http://172.20.10.13:9090/api/v1/auth';
+  final String baseUrl = 'http://192.168.1.12:9090/api/v1/auth';
 
-
-  String get authToken{
-
+  String get authToken {
     return _authToken;
   }
 
-  String get userId{
+  String get userId {
     return _userId;
   }
 
-  bool get isTokenValid{
+  bool get isTokenValid {
     return _authToken.isNotEmpty && _expirationTime!.isAfter(DateTime.now());
   }
 
-  Future<void> signIn(Map<String,Object> payload) async {
+  Future<void> signIn(Map<String, Object> payload) async {
     final url = Uri.parse("$baseUrl/register");
-    try{
-      final response= await http.post(url,
-              headers: {'Content-Type': 'application/json'},
-              body: json.encode(
-                {
-                  'firstName': payload['firstName'],
-                  'email': payload['email'],
-                  'password': payload['password'],
-                }
-              ),);
-        final responseData = json.decode(response.body);
-        _authToken = responseData['token'];
-        _userId = responseData['userId'].toString();
-        _expirationTime = DateTime.parse(responseData['expirationDate']);
-    }catch(exception){
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'firstName': payload['firstName'],
+          'email': payload['email'],
+          'password': payload['password'],
+        }),
+      );
+      final responseData = json.decode(response.body);
+      _authToken = responseData['token'];
+      _userId = responseData['userId'].toString();
+      _expirationTime = DateTime.parse(responseData['expirationDate']);
+    } catch (exception) {
       rethrow;
     }
     _autoLogout();
     notifyListeners();
   }
 
-
-  Future<void> logIn(Map<String,Object> payload) async {
+  Future<void> logIn(Map<String, Object> payload) async {
     final url = Uri.parse("$baseUrl/authenticate");
-    try{
-      final response= await http.post(url,
+    try {
+      final response = await http.post(
+        url,
         headers: {'Content-Type': 'application/json'},
-        body: json.encode(
-            {
-              'email': payload['email'],
-              'password': payload['password'],
-            }
-        ),);
+        body: json.encode({
+          'email': payload['email'],
+          'password': payload['password'],
+        }),
+      );
       final responseData = json.decode(response.body);
       _authToken = responseData['token'];
       _userId = responseData['userId'].toString();
@@ -71,27 +67,27 @@ class Authentication with ChangeNotifier{
       _autoLogout();
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
-      final userData = json.encode(
-        {
-          "token": _authToken,
-          "userId": _userId,
-          "expirationDate" : _expirationTime!.toIso8601String()
-        });
+      final userData = json.encode({
+        "token": _authToken,
+        "userId": _userId,
+        "expirationDate": _expirationTime!.toIso8601String()
+      });
       prefs.setString("userData", userData);
-    }catch(exception){
+    } catch (exception) {
       rethrow;
     }
   }
 
-  Future<bool> tryAutoLogin() async{
+  Future<bool> tryAutoLogin() async {
     final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('userData')){
+    if (!prefs.containsKey('userData')) {
       return false;
     }
-    final extractedUserData = json.decode(prefs.getString("userData").toString()) as Map<String,dynamic>;
+    final extractedUserData = json
+        .decode(prefs.getString("userData").toString()) as Map<String, dynamic>;
     final expiryDate = DateTime.parse(extractedUserData['expirationDate']);
 
-    if(expiryDate.isBefore(DateTime.now())){
+    if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
     _authToken = extractedUserData['token'];
@@ -102,29 +98,30 @@ class Authentication with ChangeNotifier{
     return true;
   }
 
-  Future<void> logOut() async{
+  Future<void> logOut() async {
     _authToken = '';
     _userId = '';
     _expirationTime = null;
-    if(_authTime != null ){
+    if (_authTime != null) {
       _authTime!.cancel();
     }
     _authTime = null;
-    try{
+    try {
       final sharedPrefences = await SharedPreferences.getInstance();
       sharedPrefences.remove("userData");
-    }catch(Exception){ print(Exception);}
+    } catch (Exception) {
+      print(Exception);
+    }
 
     notifyListeners();
   }
 
-  void _autoLogout(){
-    if(_authTime != null ){
+  void _autoLogout() {
+    if (_authTime != null) {
       _authTime!.cancel();
       _authTime = null;
     }
     final timeToExpiry = _expirationTime!.difference(DateTime.now()).inSeconds;
-    _authTime = Timer(Duration(seconds: timeToExpiry),logOut);
+    _authTime = Timer(Duration(seconds: timeToExpiry), logOut);
   }
-
 }

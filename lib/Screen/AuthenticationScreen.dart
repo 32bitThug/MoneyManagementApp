@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/Payload/Authentication.dart';
 import 'package:provider/provider.dart';
-import 'dart:math';
 
 enum AuthMode {
   logIn,
@@ -72,7 +71,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                       ),
                       Flexible(
                         flex: mediaQuery.size.width > 600 ? 2 : 1,
-                        child: AuthCard(),
+                        child: const AuthCard(),
                       )
                     ],
                   ),
@@ -86,6 +85,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 }
 
 class AuthCard extends StatefulWidget {
+  const AuthCard({super.key});
+
 
   @override
   _AuthCardState createState() => _AuthCardState();
@@ -100,7 +101,7 @@ class _AuthCardState extends State<AuthCard> {
 
   AuthMode _authMode = AuthMode.logIn;
 
-  Map<String, String> _authData = {
+  final Map<String, String> _authData = {
     'fullName': '',
     'email': '',
     'password': '',
@@ -213,6 +214,7 @@ class _AuthCardState extends State<AuthCard> {
                       if(name!.isEmpty) {
                         return 'Enter Name';
                       }
+                      return null;
                     },
                     onSaved: (value){
                       _authData['fullName'] = value!;
@@ -247,6 +249,7 @@ class _AuthCardState extends State<AuthCard> {
                     if (value!.isEmpty || value.length < 5) {
                       return 'Password is too short!';
                     }
+                    return null;
                   },
                   focusNode: _password,
                   onSaved: (value) {
@@ -271,6 +274,7 @@ class _AuthCardState extends State<AuthCard> {
                       if (value != _passwordController.text) {
                         return 'Passwords do not match!';
                       }
+                      return null;
                     }
                         : null,
                     focusNode: _confirmpassword,

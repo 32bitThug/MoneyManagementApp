@@ -9,7 +9,7 @@ class DebitWidget extends StatelessWidget {
 
   final Debit debit;
 
-  const DebitWidget(this.debit);
+  const DebitWidget(this.debit, {super.key});
 
   @override
   Widget build(BuildContext context) {

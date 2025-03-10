@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/Widget/Graphs/MonthlyGraph.dart';
-import 'package:provider/provider.dart';
-import '../Providers/CreditData.dart';
 import '../Widget/Graphs/WeeklyGraph.dart';
 
 
@@ -17,11 +15,11 @@ class GraphScreen extends StatefulWidget {
 class _GraphScreenState extends State<GraphScreen> {
 
   Map<String,Widget> multipleGraphs = {
-    "Week Analysis":WeeklyGraph(),
+    "Week Analysis":const WeeklyGraph(),
     "Month Analysis": const MonthlyGraph()
   };
 
-  Widget? displayingWidget = WeeklyGraph();
+  Widget? displayingWidget = const WeeklyGraph();
   @override
   Widget build(BuildContext context) {
     return Scaffold(

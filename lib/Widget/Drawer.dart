@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:money_management/Screen/DebitScreen.dart';
 import 'package:money_management/Screen/GraphScreen.dart';
 
-import '../Screen/HomeScreen.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({Key? key}) : super(key: key);
@@ -16,8 +14,8 @@ class DrawerWidget extends StatelessWidget {
             height: 100,
             width: MediaQuery.of(context).size.width,
             color: Colors.blueAccent,
-            child: Row(
-              children:const [
+            child: const Row(
+              children:[
                 SizedBox(),
                 Text('Menu',style: TextStyle(
                   color: Colors.white,fontSize: 20,
@@ -43,7 +41,7 @@ class Build extends StatelessWidget {
   final String text;
   final Function() fun;
 
-  Build({required this.icon, required this.text, required this.fun});
+  const Build({super.key, required this.icon, required this.text, required this.fun});
 
   @override
   Widget build(BuildContext context) {

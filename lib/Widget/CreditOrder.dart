@@ -7,7 +7,7 @@ import '../Payload/Credit.dart';
 class CreditWidget extends StatelessWidget {
 
   final Credit credit;
-  const CreditWidget(this.credit);
+  const CreditWidget(this.credit, {super.key});
   
   @override
   Widget build(BuildContext context) {

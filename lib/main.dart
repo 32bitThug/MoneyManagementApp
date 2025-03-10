@@ -8,7 +8,6 @@ import 'package:money_management/Screen/DebitScreen.dart';
 import 'package:money_management/Screen/GoogleMapScreen.dart';
 import 'package:money_management/Screen/GraphScreen.dart';
 import 'package:money_management/Screen/MapScreen.dart';
-import 'package:money_management/Widget/DisplayWithMap.dart';
 import 'package:money_management/Widget/splash_screen.dart';
 import 'package:provider/provider.dart';
 import 'Screen/AuthenticationScreen.dart';
@@ -23,53 +22,61 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-            value: Authentication()),
-        ChangeNotifierProxyProvider<Authentication,CreditData>(
-            create: (_) => CreditData('', [],''),
-            update: (ctx, authentication, prevCreditData) =>
-                CreditData(
-                    authentication.authToken,prevCreditData == null ? [] : prevCreditData.data,
-                    authentication.userId
-            ),
+        ChangeNotifierProvider.value(value: Authentication()),
+        ChangeNotifierProxyProvider<Authentication, CreditData>(
+          create: (_) => CreditData('', [], ''),
+          update:
+              (ctx, authentication, prevCreditData) => CreditData(
+                authentication.authToken,
+                prevCreditData == null ? [] : prevCreditData.data,
+                authentication.userId,
+              ),
         ),
-        ChangeNotifierProxyProvider<Authentication,DebitData>(
+        ChangeNotifierProxyProvider<Authentication, DebitData>(
           create: (ctx) => DebitData("", [], ''),
-          update: (ctx,authentication, prevDebitData) =>
-                DebitData(
-                  authentication.authToken,
-                    prevDebitData==null ? []: prevDebitData.data,
-                    authentication.userId
-                )
+          update:
+              (ctx, authentication, prevDebitData) => DebitData(
+                authentication.authToken,
+                prevDebitData == null ? [] : prevDebitData.data,
+                authentication.userId,
+              ),
         ),
-        ChangeNotifierProvider.value(
-            value: DataAnalysis()
-        ),
+        ChangeNotifierProvider.value(value: DataAnalysis()),
         ChangeNotifierProxyProvider<CreditData, SmsService>(
           create: (_) => SmsService(creditData: null, debitData: null),
-          update: (ctx, authentication, prevSmsService) => SmsService(
-            creditData: Provider.of<CreditData>(ctx, listen: false),
-            debitData: Provider.of<DebitData>(ctx, listen: false),
-          ),
+          update:
+              (ctx, authentication, prevSmsService) => SmsService(
+                creditData: Provider.of<CreditData>(ctx, listen: false),
+                debitData: Provider.of<DebitData>(ctx, listen: false),
+              ),
         ),
       ],
       child: Consumer<Authentication>(
-        builder: (ctx, auth, _) => MaterialApp(
-          title: "Money Management",
-          debugShowCheckedModeBanner: false,
-          home: auth.isTokenValid ? const Home() : FutureBuilder(future: auth.tryAutoLogin(),builder: (ctx,authResultSnapShot) => authResultSnapShot.connectionState == ConnectionState.waiting ? SplashScreen() : const AuthenticationScreen()),
-          routes: {
-            Home.routeName: (ctx) => const Home(),
-            Debit.routeName: (ctx) => const Debit(),
-            GraphScreen.routeName: (ctx) =>const GraphScreen(),
-            MapScreen.routeName: (ctx) =>  const MapScreen(),
-            GoogleMapScreen.routeName: (ctx) => const GoogleMapScreen(),
-          },
-        ),
-      )
+        builder:
+            (ctx, auth, _) => MaterialApp(
+              title: "Money Management",
+              debugShowCheckedModeBanner: false,
+              home:
+                  auth.isTokenValid
+                      ? const Home()
+                      : FutureBuilder(
+                        future: auth.tryAutoLogin(),
+                        builder:
+                            (ctx, authResultSnapShot) =>
+                                authResultSnapShot.connectionState ==
+                                        ConnectionState.waiting
+                                    ? const SplashScreen()
+                                    : const AuthenticationScreen(),
+                      ),
+              routes: {
+                Home.routeName: (ctx) => const Home(),
+                Debit.routeName: (ctx) => const Debit(),
+                GraphScreen.routeName: (ctx) => const GraphScreen(),
+                MapScreen.routeName: (ctx) => const MapScreen(),
+                GoogleMapScreen.routeName: (ctx) => const GoogleMapScreen(),
+              },
+            ),
+      ),
     );
   }
 }
-
-
-

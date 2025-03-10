@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_management/Payload/Authentication.dart';
 import 'package:money_management/Providers/SmsService.dart';
-import 'package:money_management/Screen/SMS.dart';
 import 'package:money_management/Widget/AddTransaction.dart';
 import 'package:money_management/Widget/Drawer.dart';
 import 'package:provider/provider.dart';
@@ -84,7 +83,7 @@ class _HomeState extends State<Home> {
         ),
         drawer: const DrawerWidget(),
         // body : const SMSWidget(),
-        body: currentMode == DisplayMode.homeScreen ? CreditScreen(): Debit(),
+        body: currentMode == DisplayMode.homeScreen ? const CreditScreen(): const Debit(),
         bottomNavigationBar: BottomNavigationBar(
           onTap: updateSelectIndex,
           currentIndex: currentMode.index,

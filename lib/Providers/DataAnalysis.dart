@@ -24,7 +24,7 @@ class DataAnalysis with ChangeNotifier{
   List<WeeklyData> getWeeklyCreditData(List<Credit> credits){
     List<WeeklyData> data= DataFormat.formattedWeeklyData();
     _creditExpenditures = 0;
-    data.forEach((weeklyData) {
+    for (var weeklyData in data) {
       for(int i=0;i < credits.length;i++){
         if(weeklyData.weekDay == DateFormat.E().format(credits[i].createdDate)){
           Credit element = credits[i];
@@ -33,26 +33,26 @@ class DataAnalysis with ChangeNotifier{
           _creditExpenditures += weeklyData.amount;
         }
       }
-    });
+    }
     return data;
   }
 
   List<MonthlyData> getMonthlyCreditData(List<Credit> credits){
     List<MonthlyData> data = DataFormat.formattedMonthlyData();
     _creditExpenditures = 0;
-    credits.forEach((element) {
+    for (var element in credits) {
       var index = element.createdDate.day;
       data[index].amount += element.quantity * element.cost;
       data[index].quantity += element.quantity;
       _creditExpenditures += data[index].amount;
-    });
+    }
     return data;
   }
 
   List<WeeklyData> getWeeklyDebitData(List<Debit> debits){
     List<WeeklyData> data = DataFormat.formattedWeeklyData();
     _debitExpenditures = 0;
-    data.forEach((weeklyData) {
+    for (var weeklyData in data) {
       var index = debits.indexWhere((debit) => weeklyData.weekDay == DateFormat.E().format(debit.createdDate));
       if(index!=-1){
         Debit element = debits[index];
@@ -60,19 +60,19 @@ class DataAnalysis with ChangeNotifier{
         weeklyData.quantity += 1;
         _debitExpenditures += weeklyData.amount;
       }
-    });
+    }
     return data;
   }
 
   List<MonthlyData> getMonthlyDebitData(List<Debit> debits){
     List<MonthlyData> data = DataFormat.formattedMonthlyData();
     _debitExpenditures = 0;
-    debits.forEach((element) {
+    for (var element in debits) {
       var index = element.createdDate.day;
       data[index].amount += element.amount;
       data[index].quantity += 1;
       _debitExpenditures += data[index].amount;
-    });
+    }
     return data;
   }
 }

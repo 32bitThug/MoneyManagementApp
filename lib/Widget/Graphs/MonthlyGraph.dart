@@ -16,11 +16,10 @@ class MonthlyGraph extends StatefulWidget {
 }
 
 class _MonthlyGraphState extends State<MonthlyGraph> {
-
   @override
   void initState() {
-    Provider.of<CreditData>(context,listen: false).fetchAnalysisData('Month');
-    Provider.of<DebitData>(context,listen: false).fetchAnalysisData('Month');
+    Provider.of<CreditData>(context, listen: false).fetchAnalysisData('Month');
+    Provider.of<DebitData>(context, listen: false).fetchAnalysisData('Month');
     super.initState();
   }
 
@@ -33,43 +32,41 @@ class _MonthlyGraphState extends State<MonthlyGraph> {
     return Column(
       children: [
         SizedBox(
-          height: media.size.height/2,
+          height: media.size.height / 2,
           child: Card(
             shadowColor: Colors.blueAccent,
             elevation: 10,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(25)
-            ),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
             child: SfCartesianChart(
-              primaryXAxis: CategoryAxis(
-                  title: AxisTitle(
-                      text: 'Monthly Expenditure'
-                  )
-              ),
+              primaryXAxis:
+                  CategoryAxis(title: AxisTitle(text: 'Monthly Expenditure')),
               margin: const EdgeInsets.all(15),
               tooltipBehavior: TooltipBehavior(enable: true),
-              legend: Legend(
-                  isVisible: true
-              ),
-              series: <ChartSeries>[
-                StackedLineSeries<MonthlyData,int>(
-                    dataSource: dataAnalysis.getMonthlyCreditData(credit.analysisData),
-                    xValueMapper: (MonthlyData monthlyData,_)  => monthlyData.day,
-                    yValueMapper: (MonthlyData monthlyData,_)  => monthlyData.amount.round(),
+              legend: Legend(isVisible: true),
+              series: <CartesianSeries>[
+                StackedLineSeries<MonthlyData, int>(
+                    dataSource:
+                        dataAnalysis.getMonthlyCreditData(credit.analysisData),
+                    xValueMapper: (MonthlyData monthlyData, _) =>
+                        monthlyData.day,
+                    yValueMapper: (MonthlyData monthlyData, _) =>
+                        monthlyData.amount.round(),
                     markerSettings: const MarkerSettings(
                       isVisible: true,
                     ),
-                    name: 'Credits'
-                ),
-                StackedLineSeries<MonthlyData,int>(
-                    dataSource: dataAnalysis.getMonthlyDebitData(debit.analysisData),
-                    xValueMapper: (MonthlyData monthlyData,_)  => monthlyData.day,
-                    yValueMapper: (MonthlyData monthlyData,_)  => monthlyData.amount.round(),
+                    name: 'Credits'),
+                StackedLineSeries<MonthlyData, int>(
+                    dataSource:
+                        dataAnalysis.getMonthlyDebitData(debit.analysisData),
+                    xValueMapper: (MonthlyData monthlyData, _) =>
+                        monthlyData.day,
+                    yValueMapper: (MonthlyData monthlyData, _) =>
+                        monthlyData.amount.round(),
                     markerSettings: const MarkerSettings(
                       isVisible: true,
                     ),
-                    name: "Debits"
-                ),
+                    name: "Debits"),
               ],
             ),
           ),
